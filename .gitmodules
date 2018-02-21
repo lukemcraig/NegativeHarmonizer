@@ -1,0 +1,3 @@
+[submodule "python-midi"]
+	path = python-midi
+	url = https://github.com/vishnubob/python-midi
