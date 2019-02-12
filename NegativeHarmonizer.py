@@ -84,18 +84,19 @@ def main(input_file, tonic, ignored_channels, adjust_octaves):
     mid.save(root + "_negative" + ext)
 
 
-parser = argparse.ArgumentParser(description='Negative Harmonize a midi file.')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Negative Harmonize a midi file.')
 
-parser.add_argument('file', metavar='f',
-                    help='the input midi file (with no extension .mid)')
-parser.add_argument('--tonic', type=int, default=55,
-                    help='the tonic')
-parser.add_argument('--ignore', type=int, nargs="+", default=[],
-                    help='the midi channels to ignore (usually 9 for drums)')
-parser.add_argument('--adjust-octaves', dest='adjust_octaves', action='store_true',
-                    help='transpose octaves to keep bass instruments low')
-parser.set_defaults(adjust_octaves=False)
+    parser.add_argument('file', metavar='f',
+                        help='the input midi file (with no extension .mid)')
+    parser.add_argument('--tonic', type=int, default=55,
+                        help='the tonic')
+    parser.add_argument('--ignore', type=int, nargs="+", default=[],
+                        help='the midi channels to ignore (usually 9 for drums)')
+    parser.add_argument('--adjust-octaves', dest='adjust_octaves', action='store_true',
+                        help='transpose octaves to keep bass instruments low')
+    parser.set_defaults(adjust_octaves=False)
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-main(input_file=args.file, tonic=args.tonic, ignored_channels=args.ignore, adjust_octaves=args.adjust_octaves)
+    main(input_file=args.file, tonic=args.tonic, ignored_channels=args.ignore, adjust_octaves=args.adjust_octaves)
