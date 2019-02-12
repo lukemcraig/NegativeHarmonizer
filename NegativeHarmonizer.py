@@ -28,10 +28,10 @@ def find_average_octave_of_tracks(mid):
             except AttributeError:
                 track_name = i
             print(track_name, track_avg_note)
-    return octaves, track_avg_note
+    return octaves
 
 
-def mirror_all_notes(ignored_channels, mid, mirror_axis):
+def mirror_all_notes(mid, mirror_axis, ignored_channels):
     for track in mid.tracks:
         for note in track:
             if note.type == 'note_on' or note.type == 'note_off':
@@ -41,7 +41,7 @@ def mirror_all_notes(ignored_channels, mid, mirror_axis):
     return
 
 
-def transpose_back_to_original_octaves(ignored_channels, mid, new_octaves, original_octaves):
+def transpose_back_to_original_octaves(mid, original_octaves, new_octaves, ignored_channels):
     for i, track in enumerate(mid.tracks):
         if i in original_octaves:
             notes_distance = original_octaves[i] - new_octaves[i]
@@ -57,30 +57,19 @@ def invert_tonality(mid, tonic, ignored_channels):
     mirror_axis = get_mirror_axis(tonic)
     print("---")
     print("original average note values:")
-    original_octaves, track_avg_note = find_average_octave_of_tracks(mid)
+    original_octaves = find_average_octave_of_tracks(mid)
 
-    mirror_all_notes(ignored_channels, mid, mirror_axis)
+    mirror_all_notes(mid, mirror_axis, ignored_channels)
 
     print("---")
     print("new average note values:")
-    new_octaves, track_avg_note = find_average_octave_of_tracks(mid)
+    new_octaves = find_average_octave_of_tracks(mid)
 
-    transpose_back_to_original_octaves(ignored_channels, mid, new_octaves, original_octaves)
+    transpose_back_to_original_octaves(mid, original_octaves, new_octaves, ignored_channels)
 
     print("---")
     print("adjusted average note values:")
-    for i, track in enumerate(mid.tracks):
-        track_avg_notes = []
-        for note in track:
-            if note.type == 'note_on':
-                track_avg_notes.append(note.note)
-        if len(track_avg_notes) > 0:
-            track_avg_note = sum(track_avg_notes) / len(track_avg_notes)
-            try:
-                track_name = track.name
-            except AttributeError:
-                track_name = i
-            print(track_name, track_avg_note)
+    find_average_octave_of_tracks(mid)
     return
 
 
