@@ -17,9 +17,9 @@ def find_average_octave_of_tracks(mid):
     octaves = {}
     for i, track in enumerate(mid.tracks):
         track_avg_notes = []
-        for note in track:
-            if note.type == 'note_on':
-                track_avg_notes.append(note.note)
+        for message in track:
+            if message.type == 'note_on':
+                track_avg_notes.append(message.note)
         if len(track_avg_notes) > 0:
             track_avg_note = sum(track_avg_notes) / len(track_avg_notes)
             octaves[i] = track_avg_note
@@ -33,11 +33,11 @@ def find_average_octave_of_tracks(mid):
 
 def mirror_all_notes(mid, mirror_axis, ignored_channels):
     for track in mid.tracks:
-        for note in track:
-            if note.type == 'note_on' or note.type == 'note_off':
-                if note.channel not in ignored_channels:
-                    mirrored_note = mirror_note_over_axis(note.note, mirror_axis)
-                    note.note = mirrored_note
+        for message in track:
+            if message.type == 'note_on' or message.type == 'note_off':
+                if message.channel not in ignored_channels:
+                    mirrored_note = mirror_note_over_axis(message.note, mirror_axis)
+                    message.note = mirrored_note
     return
 
 
@@ -46,38 +46,41 @@ def transpose_back_to_original_octaves(mid, original_octaves, new_octaves, ignor
         if i in original_octaves:
             notes_distance = original_octaves[i] - new_octaves[i]
             octaves_to_transpose = round(notes_distance / 12)
-            for note in track:
-                if note.type == 'note_on' or note.type == 'note_off':
-                    if note.channel not in ignored_channels:
-                        transposed_note = note.note + (octaves_to_transpose * 12)
-                        note.note = int(transposed_note)
+            for message in track:
+                if message.type == 'note_on' or message.type == 'note_off':
+                    if message.channel not in ignored_channels:
+                        transposed_note = message.note + (octaves_to_transpose * 12)
+                        message.note = int(transposed_note)
 
 
-def invert_tonality(mid, tonic, ignored_channels):
+def invert_tonality(mid, tonic, ignored_channels, adjust_octaves):
     mirror_axis = get_mirror_axis(tonic)
-    print("---")
-    print("original average note values:")
-    original_octaves = find_average_octave_of_tracks(mid)
+
+    if adjust_octaves:
+        print("---")
+        print("original average note values:")
+        original_octaves = find_average_octave_of_tracks(mid)
 
     mirror_all_notes(mid, mirror_axis, ignored_channels)
 
-    print("---")
-    print("new average note values:")
-    new_octaves = find_average_octave_of_tracks(mid)
+    if adjust_octaves:
+        print("---")
+        print("new average note values:")
+        new_octaves = find_average_octave_of_tracks(mid)
 
-    transpose_back_to_original_octaves(mid, original_octaves, new_octaves, ignored_channels)
+        transpose_back_to_original_octaves(mid, original_octaves, new_octaves, ignored_channels)
 
-    print("---")
-    print("adjusted average note values:")
-    find_average_octave_of_tracks(mid)
+        print("---")
+        print("adjusted average note values:")
+        find_average_octave_of_tracks(mid)
     return
 
 
-def main(input_file, tonic=55, ignored_channels=[]):
+def main(input_file, tonic, ignored_channels, adjust_octaves):
     root, ext = os.path.splitext(input_file)
     mid = mido.MidiFile(input_file)
 
-    invert_tonality(mid, tonic, ignored_channels)
+    invert_tonality(mid, tonic, ignored_channels, adjust_octaves)
     mid.save(root + "_negative" + ext)
 
 
@@ -87,9 +90,12 @@ parser.add_argument('file', metavar='f',
                     help='the input midi file (with no extension .mid)')
 parser.add_argument('--tonic', type=int, default=55,
                     help='the tonic')
-parser.add_argument('--ignore', type=list, nargs="+", default=[],
+parser.add_argument('--ignore', type=int, nargs="+", default=[],
                     help='the midi channels to ignore (usually 9 for drums)')
+parser.add_argument('--adjust-octaves', dest='adjust_octaves', action='store_true',
+                    help='transpose octaves to keep bass instruments low')
+parser.set_defaults(adjust_octaves=False)
 
 args = parser.parse_args()
 
-main(input_file=args.file, tonic=args.tonic, ignored_channels=args.ignore)
+main(input_file=args.file, tonic=args.tonic, ignored_channels=args.ignore, adjust_octaves=args.adjust_octaves)
