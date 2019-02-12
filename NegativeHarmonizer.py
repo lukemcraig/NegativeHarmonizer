@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
     parser.add_argument('file', metavar='f',
                         help='the input midi file (with no extension .mid)')
-    parser.add_argument('--tonic', type=int, default=55,
+    parser.add_argument('--tonic', type=int, default=60,
                         help='the tonic')
     parser.add_argument('--ignore', type=int, nargs="+", default=[],
                         help='the midi channels to ignore (usually 9 for drums)')

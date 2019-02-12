@@ -8,9 +8,13 @@ Dependencies:
 
 Usage:
 
-`python NegativeHarmonizer.py midifile.mid --tonic 55 --ignore 9`
+`python NegativeHarmonizer.py midifile.mid --tonic 60 --ignore 9 --adjust-octaves`
 
-This examples creates a new midifile named midifile_negative.mid that's been flipped over middle C and doesn't alter channel 9 because we don't want to alter the drums.
+This example command 
+1. creates a new midifile named midifile_negative.mid 
+2. flipped over middle C (midi note number 60)
+3. channel 9 is unaltered because we don't want to change the drums.
+4. the tracks are transposed to be close to their original octave, so the bass guitar will stay in the bass range etc.
 
 
 You can hear more examples of what can be done with NegativeHarmonizer on my YouTube channel (with some neat Tonnetz Lattice visualizations): https://www.youtube.com/watch?v=NDDE3Omt-DY
