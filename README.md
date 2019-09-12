@@ -22,3 +22,6 @@ You can hear more examples of what can be done with NegativeHarmonizer on my You
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=NDDE3Omt-DY" target="_blank"><img src="http://i3.ytimg.com/vi/NDDE3Omt-DY/hqdefault.jpg" alt="Beethoven, Symphony 5, 1st movement: Negative Harmony" width="240" height="180" border="10" /></a>
  
 Some background on Negative Harmony from Jacob Collier: https://youtu.be/DnBr070vcNE?t=1m31s
+
+# Real-time MIDI plug-in for DAWs
+You can find the plug-in version here: https://github.com/lukemcraig/negative-harmonizer-plugin
